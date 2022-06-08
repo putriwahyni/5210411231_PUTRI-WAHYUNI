@@ -1,0 +1,14 @@
+import sqlite3
+
+conn = sqlite3.connect("pbop12")
+cur = conn.cursor()
+
+cur.execute("INSERT INTO jabatan VALUES('RT','Ketua',50000000,1000000)")
+cur.execute("INSERT INTO jabatan VALUES('KW','Sekertaris',10000000,5000000)")
+cur.execute("INSERT INTO jabatan VALUES('MK','Bendahara',1000000,100000)")
+
+conn.commit()
+
+cur.close()
+
+conn.close()
