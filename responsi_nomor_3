@@ -1,0 +1,123 @@
+import mysql.connector
+
+
+conn = mysql.connector.connect(
+  host = 'localhost',
+  user = 'root',
+  password = '',
+  database = '5210411231_putriwahyuni'
+)
+
+cur = conn.cursor()
+
+
+class database:
+  def __init__(self, array):
+    self.array = array
+  def insert(self):
+    try:
+      cur.execute(f"INSERT INTO responsi (nim, nama, jurusan, nilaiTugas, nilaiUTS, nilaiUAS, nilaiangka, nilaiakhir) VALUES{self.array}")
+      conn.commit()
+      return "\ntambah data berhasil\n"
+    except:
+      return "\ntambah data gagal\n"
+  def selectall(self):
+    cur.execute("SELECT * FROM responsi")
+
+    data = cur.fetchall()
+    return data
+  def selectone(self):
+    cur.execute(f"SELECT * FROM responsi where nim={self.array[0]}")
+    header = [x[0] for x in cur.description]
+    data = cur.fetchall()
+    return [header, data]
+  def update(self):
+    try:
+      cur.execute(f"UPDATE responsi SET nama='{self.array[1]}', jurusan='{self.array[2]}', nilaiTugas={self.array[3]}, nilaiUTS={self.array[4]}, nilaiUAS={self.array[5]}, nilaiangka={self.array[6]}, nilaiakhir='{self.array[7]}' WHERE nim='{self.array[0]}'")
+      conn.commit()
+      return '\nUPDATE BERHASIL\n'
+    except:
+      return '\nUPDATE GAGAL\n'
+  def delete(self):
+    try:
+      cur.execute(f"DELETE FROM responsi WHERE nim={self.array[0]}")
+      conn.commit()
+      return '\nDELETE BERHASIL\n'
+    except:
+      return '\nDELETE GAGAL\n'
+
+
+while True:
+  print('Menu Nilai')
+  print('1. Tambah Data')
+  print('2. Lihat Data')
+  print('3. Update Data')
+  print('4. Hapus Data')
+  print('0. Keluar')
+  
+  pilih = input("Masukan pilihan (0-4) : ")
+
+  match pilih:
+    case "1": 
+      while True:
+        nim = str(input("NIM (8 digit): "))
+        nama = str(input("Nama : "))
+        jurusan = str(input("Jurusan : "))
+        tugas = int(input("Masukan Nilai Tugas : "))
+        uts = int(input("Masukan Nilai UTS : "))
+        uas = int(input("Masukan Nilai UAS : "))
+        angka = (20/100*tugas)+(40/100*uts)+(40/100*uas)
+        if angka>80: akhir = 'A'
+        elif angka>70: akhir = 'B'
+        elif angka>60: akhir = 'C'
+        elif angka>50: akhir = 'D'
+        else: akhir = 'E'
+        print(f"Nilai Angka : {angka}")
+        print(f"Nilai Akhir : {akhir}")
+        data = database((nim, nama, jurusan, tugas, uts, uas, angka, akhir))
+        print(data.insert())
+        next = input("apakah ingin menambah data lagi? (Y/T) : ")
+        match next:
+          case "y": continue
+          case _: break
+    case "2": 
+      print('1. Lihat Satu')
+      print('2. Lihat Semua')
+      pilih = input("Masukan pilihan : ")
+      match pilih:
+        case '1':
+          nim = str(input("Masukan NIM : "))
+          data = database((nim,)).selectone()
+
+          if data[1]!=[]:
+            x=1
+            for row in range(len(data[1][0])-1):
+              print(data[0][x],": ",data[1][0][x])
+              x+=1
+          else:
+            print('\nNIM TIDAK ADA DI DATABASE\n')
+        case "2":
+          data = database(()).selectall()
+          for row in data:
+            print(row)
+          
+    case "3": 
+      nim = str(input("NIM : "))
+      nama = str(input("Nama : "))
+      jurusan = str(input("Jurusan : "))
+      tugas = int(input("Masukan Nilai Tugas : "))
+      uts = int(input("Masukan Nilai UTS : "))
+      uas = int(input("Masukan Nilai UAS : "))
+      angka = (20/100*tugas)+(40/100*uts)+(40/100*uas)
+      if angka>80: akhir = 'A'
+      elif angka>70: akhir = 'B'
+      elif angka>60: akhir = 'C'
+      elif angka>50: akhir = 'D'
+      else: akhir = 'E'
+      data = database((nim, nama, jurusan, tugas, uts, uas, angka, akhir))
+      print(data.update())
+    case "4": 
+      nim = str(input("Masukan NIM Yang Akan dihapus : "))
+      print(database((nim)).delete())
+    case "0": break
+    case _: print('pilihan tidak ada')
