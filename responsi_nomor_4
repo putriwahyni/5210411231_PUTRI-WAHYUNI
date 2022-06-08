@@ -1,0 +1,188 @@
+import mysql.connector
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="5210411231_wisata"
+)
+cur = mydb.cursor()
+
+print("Connected to Database!")
+
+while True:
+    print("Menu\n1. Create DB\n2. Insert\n3. Edit\n4. Delete\n5. Select")
+    mp1 = input("Masukan Pilihan\n")
+    if mp1 == '1':
+        print("Buat Tabel\n1. Tempat Inap\n2. Kab/Kota\n3. Kuliner\n4. Objek Wisata\n5. Event")
+        mt1 = input("Masukan Pilihan\n")
+        if mt1 == '1':
+            cur.execute('''CREATE TABLE tempatinap (
+                            idnap VARCHAR(5) NOT NULL PRIMARY KEY,
+                            idkabkota VARCHAR(5),
+                            namanap VARCHAR(225),
+                            alamat_nap TEXT)''')
+            mydb.commit()
+            print("Buat Tabel Selesai!")
+        elif mt1 == '2':
+            cur.execute('''CREATE TABLE kab_kota (
+                            idkabkota VARCHAR(5) NOT NULL PRIMARY KEY,
+                            namakabkota VARCHAR(225))''')
+            mydb.commit()
+            print("Buat Tabel Selesai!")
+        elif mt1 == '3':
+            cur.execute('''CREATE TABLE kuliner (
+                            idkuliner VARCHAR(11) NOT NULL PRIMARY KEY,
+                            idkabkota VARCHAR(225),
+                            namakul VARCHAR(225),
+                            jeniskul VARCHAR(225),
+                            alamatkul VARCHAR(225))''')
+            mydb.commit()
+            print("Buat Tabel Selesai!")
+        elif mt1 == '4':
+            cur.execute('''CREATE TABLE objekwisata (
+                            idobjwisata VARCHAR(5) NOT NULL PRIMARY KEY,
+                            idkabkota VARCHAR(225),
+                            nama_objws VARCHAR(25),
+                            alamat_objws VARCHAR(225),
+                            ket_objws VARCHAR(225))''')
+            mydb.commit()
+            print("Buat Tabel Selesai!")
+        elif mt1 == '5':
+            cur.execute('''CREATE TABLE event (
+                            idevent VARCHAR(5) NOT NULL PRIMARY KEY,
+                            idkabkota VARCHAR(225),
+                            nama_event VARCHAR(25),
+                            waktu_event VARCHAR(225),
+                            tempat_event VARCHAR(225))''')
+            mydb.commit()
+            print("Buat Tabel Selesai!")
+        else:
+            print("Input menu salah!!")
+    elif mp1 == '2':
+        print("Insert Data\n1. Tempat Inap\n2. Kab/Kota\n3. Kuliner\n4. Objek Wisata\n5. Event\n")
+        mt2 = input("Masukan Pilihan\n")
+        if mt2 == '1':
+            cur.execute('''INSERT INTO tempatinap VALUES
+                            ("ti021","kk032","Hotel Abadi","Jl.Soeprapto"),
+                            ("ti022","kk033","Villa Renjan","Jl.Sudirman"),
+                            ("ti023","kk034","Hotel Golden","Jl.Mawar"),
+                            ("ti024","kk035","Hotel Melati","Jl.Palem")''')
+            mydb.commit()
+            print("Insert Tabel Selesai!")
+        elif mt2 == '2':
+            cur.execute('''INSERT INTO kab_kota VALUES
+                            ("kk032","Jambi"),
+                            ("kk033","Riau"),
+                            ("kk034","Padang"),
+                            ("kk035","Solo")''')
+            mydb.commit()
+            print("Insert Tabel Selesai!")
+        elif mt2 == '3':
+            cur.execute('''INSERT INTO kuliner VALUES
+                            ("ik011","kk032","Tempoyak","Makanan","Jl.Pelajar"),
+                            ("ik012","kk033","Rendang","Makanan","Jl.Nasional"),
+                            ("ik013","kk034","Sate Madura","Makanan","Jl.bantul"),
+                            ("ik014","kk035","Gudeg","Makanan","Jl.Magelang")''')
+            mydb.commit()
+            print("Insert Tabel Selesai!")
+        elif mt2 == '4':
+            cur.execute('''INSERT INTO objekwisata VALUES
+                            ("ow011","kk032","Telaga Sarangan","Jl.Magetan-Tawangmangu","Telaga yang banyak diminati pengunjung"),
+                            ("ow012","kk033","Blue Lagoon","Jl.Mbesi-Jangkang","Mata Air Murni"),
+                            ("ow013","kk034","Hutan Pinus Mangunan","Jl.Imogiri","Hutan yang sangat indah"),
+                            ("ow014","kk035","Sungai Mudal","Jl.Mudal","Sungai yang indah")''')
+            mydb.commit()
+            print("Insert Tabel Selesai!") 
+        elif mt2 == '5':
+            cur.execute('''INSERT INTO event VALUES
+                            ("ew001","kk032","Jalan Bersama","20 Juni 2022","Area tempat wisata"),
+                            ("ew002","kk033","Konser Musik","14 Juni 2022","Area tempat wisata"),
+                            ("ew003","kk034","Campur Seni","1 Juni 2022","Lapangan tempat wisata"),
+                            ("ew004","kk035","Marathon","7 Juni 2022","Area tempat wisata")''')
+            mydb.commit()
+            print("Insert Tabel Selesai!")    
+        else:
+            print("Input menu salah!!")
+    elif mp1 == '3':
+        print("Update Data\n1. Tempat Inap\n2. Kab/Kota\n3. Kuliner\n4. Objek Wisata\n5. Event\n")
+        mt3 = input("Masukan Pilihan\n")
+        if mt3 == '1':
+            p = 'tempatinap'
+            v = 'namanap = "Villa Kampoeng" WHERE idnap = "ti012"'
+            o = 'Update Tempat Inap'
+        elif  mt3 == '2':
+            p = 'kab_kota'
+            v = 'namakabkota = "Karanganyar" WHERE idkabkota = "kk011"'
+            o = 'Update kab/Kota'
+        elif mt3 == '3':
+            p = 'kuliner'
+            v = 'alamatkul = "Jl.Winginsari" WHERE idkuliner = "ik011"'
+            o = 'Update Kuliner'
+        elif mt3 == '4':
+            p = 'objekwisata'
+            v = 'nama_objws = "Sarangan" WHERE idobjwisata = "ow011"'
+            o = 'Update Objek Wisata '
+        elif mt3 == '5':
+            p = 'event'
+            v = 'nama_event = "Gebyar Tahunan" WHERE idevent = "ew001"'
+            o = 'Update Event'
+        else:
+            print("Salah Input!!")
+        cur.execute(f"UPDATE {p} SET {v}")
+        mydb.commit()
+        print(o)
+    elif mp1 == '4':
+        print("Delete Data\n1. Tempat Inap\n2. Kab/Kota\n3. Kuliner\n4. Objek Wisata\n5. Event\n")
+        mt3 = input("Masukan Pilihan\n")
+        if mt3 == '1':
+            p = 'tempatinap'
+            v = 'idnap = "ti014"'
+            o = 'Delete Tempat Inap'
+        elif  mt3 == '2':
+            p = 'kab_kota'
+            v = 'idkabkota = "kk014"'
+            o = 'Delete Kab/Kota'
+        elif mt3 == '3':
+            p = 'kuliner'
+            v = 'idkuliner = "ik014"'
+            o = 'Delete Kuliner'
+        elif mt3 == '4':
+            p = 'objekwisata'
+            v = 'idobjwisata = "ow014"'
+            o = 'Delete Objek Wisata'
+        elif mt3 == '5':
+            p = 'event'
+            v = 'idevent = "ew004"'
+            o = 'Delete Event'
+        else:
+            print("Salah Input!!")
+        cur.execute(f"DELETE FROM {p} WHERE {v}")
+        mydb.commit()
+        print(o)
+    elif mp1 == '5':
+        print("Select Tabel\n1. Tempat Inap\n2. Kab/Kota\n3. Kuliner\n4. Objek Wisata\n5. Event\n")
+        mt3 = input("Masukan Pilihan\n")
+        if mt3 == '1':
+            p = 'tempatinap'
+        elif  mt3 == '2':
+            p = 'kab_kota'
+        elif mt3 == '3':
+            p = 'kuliner'
+        elif mt3 == '4':
+            p = 'objekwisata'
+        elif mt3 == '5':
+            p = 'event'
+        else:
+            print("Salah Input!!")
+        cur.execute(f"SELECT * FROM {p}")
+        res = cur.fetchall()
+        for row in res:
+            print (row,'\n')
+    elif mp1 == '0':
+        cur.close()
+        mydb.close()
+        print("Selesai")
+        break
+    else:
+        print("Salah Input !")
